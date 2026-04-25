@@ -3,31 +3,29 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// SAFE IMAGE FUNCTION
-function getImage(text){
-return "https://source.unsplash.com/300x200/?"+encodeURIComponent(text);
-}
-
-// CREATE 200+ PRODUCTS (50 EACH YEAR)
+// 🔥 GENERATE 200 PRODUCTS
 if(!localStorage.getItem("products")){
 
 let data=[];
 
 let items = {
-"1st Year":["Maths Book","Physics Book","Chemistry Book","Lab Coat","Record Notebook"],
-"2nd Year":["DS Book","DBMS Book","Electronics Kit","Keyboard","Mouse"],
-"3rd Year":["OS Book","AI Book","Mini Project Kit","Headphones","Power Bank"],
-"4th Year":["Project Report","Laptop Bag","Hard Disk","Printer","Formal Dress"]
+"1st Year":["Maths","Physics","Chemistry","Lab","Notebook"],
+"2nd Year":["DS","DBMS","Electronics","Keyboard","Mouse"],
+"3rd Year":["OS","AI","Project","Headphones","Powerbank"],
+"4th Year":["Final Report","Laptop Bag","Hard Disk","Printer","Dress"]
 };
+
+// STATIC IMAGE (ALWAYS WORK)
+let img="https://via.placeholder.com/300x200";
 
 for(let year in items){
 items[year].forEach(item=>{
-for(let i=1;i<=10;i++){
+for(let i=1;i<=10;i++){   // 5 ×10 = 50 per year
 
 data.push({
 name:item+" "+i,
 price:100+Math.floor(Math.random()*900),
-image:getImage(item),
+image:img,
 category:year,
 seller:"Student "+i,
 contact:"9876543"+(100+i)
@@ -46,14 +44,13 @@ localStorage.removeItem("login");
 location="index.html";
 }
 
-// GET PRODUCTS
+// GET
 function getProducts(){
 return JSON.parse(localStorage.getItem("products"))||[];
 }
 
-// DISPLAY PRODUCTS
+// DISPLAY
 function displayProducts(){
-
 let products=getProducts();
 let container=document.getElementById("products");
 
@@ -74,13 +71,13 @@ return;
 filtered.forEach((p,i)=>{
 container.innerHTML+=`
 <div class="card">
-<img src="${p.image}" onerror="this.src='https://via.placeholder.com/300x200'">
+<img src="${p.image}">
 <h3>${p.name}</h3>
 <p>₹${p.price}</p>
 <p>${p.category}</p>
 <p><b>${p.seller}</b></p>
 
-<a href="https://wa.me/91${p.contact}" target="_blank">
+<a href="https://wa.me/91${p.contact}">
 <button>Contact</button></a>
 
 <button onclick="addCart(${i})">Cart</button>
@@ -89,7 +86,7 @@ container.innerHTML+=`
 });
 }
 
-// ADD PRODUCT
+// ADD
 function addProduct(){
 let p={
 name:name.value,
@@ -97,13 +94,13 @@ price:price.value,
 category:category.value,
 seller:seller.value,
 contact:contact.value,
-image:getImage(name.value)
+image:"https://via.placeholder.com/300x200"
 };
 
 let data=getProducts();
 data.push(p);
 localStorage.setItem("products",JSON.stringify(data));
-alert("Product Added!");
+alert("Added!");
 }
 
 // CART
@@ -111,7 +108,7 @@ function addCart(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.push(getProducts()[i]);
 localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to cart");
+alert("Added");
 }
 
 // CART PAGE
@@ -127,5 +124,4 @@ total+=Number(p.price);
 document.getElementById("total").innerText="Total: ₹"+total;
 }
 
-// LOAD
 window.onload=displayProducts;
