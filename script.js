@@ -24,7 +24,7 @@ let subjects = [
 ["IoT Systems","4th Year"]
 ];
 
-let img="https://via.placeholder.com/300x200";
+
 
 let data=[];
 
@@ -38,7 +38,6 @@ year:s[1],
 price:100+Math.floor(Math.random()*400),
 contact:"98"+Math.floor(100000000+Math.random()*900000000),
 available:available,
-image:img
 });
 }
 });
@@ -66,7 +65,6 @@ let data=get()
 data.forEach((p,i)=>{
 list.innerHTML+=`
 <div class="card">
-<img src="${p.image}">
 <h3>${p.name}</h3>
 <p>${p.year}</p>
 <p>₹${p.price}</p>
