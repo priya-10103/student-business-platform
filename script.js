@@ -2,40 +2,37 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// CREATE ONLY UNIQUE PRODUCTS (NO REPEAT ISSUE FIXED)
+// CREATE ONLY UNIQUE SUBJECTS (NO REPEAT)
 if(!localStorage.getItem("products")){
 
 let subjects = [
-["Engineering Mathematics","1st Year"],
-["Engineering Physics","1st Year"],
-["Engineering Chemistry","1st Year"],
-["Programming in C","1st Year"],
+{n:"Engineering Mathematics",y:"1st Year"},
+{n:"Engineering Physics",y:"1st Year"},
+{n:"Engineering Chemistry",y:"1st Year"},
+{n:"Programming in C",y:"1st Year"},
 
-["Data Structures","2nd Year"],
-["DBMS","2nd Year"],
-["OOP Java","2nd Year"],
+{n:"Data Structures",y:"2nd Year"},
+{n:"DBMS",y:"2nd Year"},
+{n:"OOP Java",y:"2nd Year"},
 
-["Operating Systems","3rd Year"],
-["Computer Networks","3rd Year"],
-["Software Engineering","3rd Year"],
+{n:"Operating Systems",y:"3rd Year"},
+{n:"Computer Networks",y:"3rd Year"},
+{n:"Software Engineering",y:"3rd Year"},
 
-["Machine Learning","4th Year"],
-["Cloud Computing","4th Year"],
-["IoT Systems","4th Year"]
+{n:"Machine Learning",y:"4th Year"},
+{n:"Cloud Computing",y:"4th Year"},
+{n:"IoT Systems",y:"4th Year"}
 ];
-
-let img="https://via.placeholder.com/300x200";
 
 let data=[];
 
 subjects.forEach(s=>{
 data.push({
-name:s[0],
-year:s[1],
+name:s.n,
+year:s.y,
 price:100+Math.floor(Math.random()*400),
 contact:"98"+Math.floor(100000000+Math.random()*900000000),
-available:Math.floor(Math.random()*6)+1,
-image:img
+available:Math.floor(Math.random()*10)+1 // DIFFERENT availability
 });
 });
 
@@ -62,7 +59,6 @@ let data=get()
 data.forEach((p,i)=>{
 list.innerHTML+=`
 <div class="card">
-<img src="${p.image}">
 <h3>${p.name}</h3>
 <p>${p.year}</p>
 <p>₹${p.price}</p>
@@ -77,15 +73,15 @@ list.innerHTML+=`
 });
 }
 
-// CART
+// ADD CART
 function add(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.push(get()[i]);
 localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to cart");
+alert("Added");
 }
 
-// SHOW CART
+// CART
 function showCart(){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 let total=0;
@@ -109,7 +105,7 @@ total+=p.price;
 document.getElementById("total").innerText="Total ₹"+total;
 }
 
-// REMOVE ITEM
+// REMOVE
 function removeItem(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.splice(i,1);
@@ -119,12 +115,11 @@ showCart();
 
 // PAYMENT
 function payNow(){
-alert("Processing payment...");
-setTimeout(()=>{
+if(confirm("Proceed to payment?")){
 alert("Payment Successful ✔");
 localStorage.removeItem("cart");
 location.reload();
-},1500);
+}
 }
 
 // LOGOUT
