@@ -2,7 +2,7 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// CREATE DATA ONLY ONCE
+// CREATE ONLY UNIQUE PRODUCTS (NO REPEAT ISSUE FIXED)
 if(!localStorage.getItem("products")){
 
 let subjects = [
@@ -24,22 +24,19 @@ let subjects = [
 ["IoT Systems","4th Year"]
 ];
 
-
+let img="https://via.placeholder.com/300x200";
 
 let data=[];
 
 subjects.forEach(s=>{
-let available = Math.floor(Math.random()*5)+1;
-
-for(let i=0;i<available;i++){
 data.push({
 name:s[0],
 year:s[1],
 price:100+Math.floor(Math.random()*400),
 contact:"98"+Math.floor(100000000+Math.random()*900000000),
-available:available,
+available:Math.floor(Math.random()*6)+1,
+image:img
 });
-}
 });
 
 localStorage.setItem("products",JSON.stringify(data));
@@ -65,6 +62,7 @@ let data=get()
 data.forEach((p,i)=>{
 list.innerHTML+=`
 <div class="card">
+<img src="${p.image}">
 <h3>${p.name}</h3>
 <p>${p.year}</p>
 <p>₹${p.price}</p>
@@ -79,7 +77,7 @@ list.innerHTML+=`
 });
 }
 
-// ADD CART
+// CART
 function add(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.push(get()[i]);
@@ -119,15 +117,14 @@ localStorage.setItem("cart",JSON.stringify(cart));
 showCart();
 }
 
-// ONLINE PAYMENT (FAKE)
+// PAYMENT
 function payNow(){
-if(confirm("Proceed to pay?")){
+alert("Processing payment...");
 setTimeout(()=>{
 alert("Payment Successful ✔");
 localStorage.removeItem("cart");
 location.reload();
 },1500);
-}
 }
 
 // LOGOUT
