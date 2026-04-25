@@ -2,46 +2,38 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// 🔥 CREATE DATA ONLY ONCE
+// CREATE DATA ONCE ONLY
 if(!localStorage.getItem("products")){
 
-let baseSubjects = [
-{subject:"Engineering Mathematics",year:"1st Year"},
-{subject:"Engineering Physics",year:"1st Year"},
-{subject:"Engineering Chemistry",year:"1st Year"},
-{subject:"Basic Electrical Engineering",year:"1st Year"},
-{subject:"Programming in C",year:"1st Year"},
+let base = [
+["Engineering Maths","1st Year"],
+["Physics","1st Year"],
+["Chemistry","1st Year"],
+["C Programming","1st Year"],
 
-{subject:"Data Structures",year:"2nd Year"},
-{subject:"Digital Electronics",year:"2nd Year"},
-{subject:"OOP in Java",year:"2nd Year"},
-{subject:"DBMS",year:"2nd Year"},
-{subject:"Discrete Mathematics",year:"2nd Year"},
+["Data Structures","2nd Year"],
+["DBMS","2nd Year"],
+["OOP","2nd Year"],
 
-{subject:"Operating Systems",year:"3rd Year"},
-{subject:"Computer Networks",year:"3rd Year"},
-{subject:"Software Engineering",year:"3rd Year"},
-{subject:"Artificial Intelligence",year:"3rd Year"},
-{subject:"Microprocessors",year:"3rd Year"},
+["Operating Systems","3rd Year"],
+["Computer Networks","3rd Year"],
+["Software Engineering","3rd Year"],
 
-{subject:"Machine Learning",year:"4th Year"},
-{subject:"Cloud Computing",year:"4th Year"},
-{subject:"IoT Systems",year:"4th Year"},
-{subject:"Big Data Analytics",year:"4th Year"},
-{subject:"Final Year Project",year:"4th Year"}
+["Machine Learning","4th Year"],
+["Cloud Computing","4th Year"],
+["IoT","4th Year"]
 ];
 
 let data=[];
 
-// Each subject has random availability count
-baseSubjects.forEach(s=>{
-let count = Math.floor(Math.random()*6)+1; // 1 to 6 available
+base.forEach(s=>{
+let count = Math.floor(Math.random()*4)+1;
 
-for(let i=1;i<=count;i++){
+for(let i=0;i<count;i++){
 data.push({
-subject:s.subject,
-year:s.year,
-price:100 + Math.floor(Math.random()*500),
+name:s[0],
+year:s[1],
+price:100+Math.floor(Math.random()*400),
 contact:"98"+Math.floor(100000000+Math.random()*900000000),
 available:count
 });
@@ -51,74 +43,62 @@ available:count
 localStorage.setItem("products",JSON.stringify(data));
 }
 
-// GET PRODUCTS
-function getProducts(){
+function get(){
 return JSON.parse(localStorage.getItem("products"))||[];
 }
 
-// DISPLAY PRODUCTS
-function displayProducts(){
+function show(){
 
-let products=getProducts();
-let container=document.getElementById("products");
-
+let list=document.getElementById("list");
 let search=document.getElementById("search")?.value.toLowerCase()||"";
 let filter=document.getElementById("filter")?.value||"";
 
-container.innerHTML="";
+list.innerHTML="";
 
-let filtered = products
-.filter(p=>p.subject.toLowerCase().includes(search))
+let data=get()
+.filter(p=>p.name.toLowerCase().includes(search))
 .filter(p=>filter===""||p.year===filter);
 
-if(filtered.length===0){
-container.innerHTML="<h2>No products found</h2>";
-return;
-}
-
-filtered.forEach((p,i)=>{
-container.innerHTML+=`
+data.forEach((p,i)=>{
+list.innerHTML+=`
 <div class="card">
-<h3>${p.subject}</h3>
-<p><b>${p.year}</b></p>
+<h3>${p.name}</h3>
+<p>${p.year}</p>
 <p>₹${p.price}</p>
 <p>Available: ${p.available}</p>
 
 <a href="https://wa.me/91${p.contact}">
 <button>Contact</button></a>
 
-<button onclick="addCart(${i})">Cart</button>
+<button onclick="add(${i})">Cart</button>
 </div>
 `;
 });
 }
 
-// ADD CART
-function addCart(i){
+function add(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
-cart.push(getProducts()[i]);
+cart.push(get()[i]);
 localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to cart");
+alert("Added");
 }
 
-// CART
-function displayCart(){
+function showCart(){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 let total=0;
 
 cart.forEach(p=>{
 document.getElementById("cart").innerHTML+=
-`<p>${p.subject} (${p.year}) - ₹${p.price}</p>`;
-total+=Number(p.price);
+`<p>${p.name} - ₹${p.price}</p>`;
+total+=p.price;
 });
 
-document.getElementById("total").innerText="Total: ₹"+total;
+document.getElementById("total").innerText="Total ₹"+total;
 }
 
-// LOGOUT
 function logout(){
 localStorage.removeItem("login");
 location="index.html";
 }
 
-window.onload=displayProducts;
+window.onload=show;
