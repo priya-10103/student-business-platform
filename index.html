@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Marketplace</title>
+<title>Login</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-    <h1>🛍 Student Marketplace</h1>
-    <div>
-        <a href="add.html">Add</a>
-        <a href="cart.html">Cart</a>
-        <button onclick="logout()">Logout</button>
-        <button onclick="toggleMode()">🌙</button>
-    </div>
-</header>
+<h2>Student Marketplace Login</h2>
 
-<div id="stats"></div>
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
 
-<input id="search" placeholder="Search..." onkeyup="displayProducts()">
+<button onclick="login()">Login</button>
 
-<select id="filter" onchange="displayProducts()">
-<option value="">All</option>
-<option value="Books">Books</option>
-<option value="Electronics">Electronics</option>
-</select>
+<script>
+function login(){
+    if(user.value==="admin" && pass.value==="1234"){
+        localStorage.setItem("login","true");
+        window.location="home.html";
+    } else {
+        alert("Wrong login");
+    }
+}
+</script>
 
-<div id="products"></div>
-
-<script src="script.js"></script>
 </body>
 </html>
