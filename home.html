@@ -13,9 +13,11 @@
 <a href="add.html">Add</a>
 <a href="cart.html">Cart</a>
 <button onclick="logout()">Logout</button>
-<button onclick="toggleMode()">🌙</button>
 </div>
 </header>
+
+<div class="controls">
+<button onclick="history.back()">⬅ Back</button>
 
 <input id="search" placeholder="Search..." onkeyup="displayProducts()">
 
@@ -26,6 +28,7 @@
 <option value="3rd Year">3rd Year</option>
 <option value="4th Year">4th Year</option>
 </select>
+</div>
 
 <div id="products"></div>
 

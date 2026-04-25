@@ -3,60 +3,40 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// 🔥 GENERATE 200+ PRODUCTS (50 PER YEAR)
+// SAFE IMAGE FUNCTION
+function getImage(text){
+return "https://source.unsplash.com/300x200/?"+encodeURIComponent(text);
+}
+
+// CREATE 200+ PRODUCTS (50 EACH YEAR)
 if(!localStorage.getItem("products")){
 
 let data=[];
 
-// YEAR ITEMS (REALISTIC)
 let items = {
-"1st Year":["Maths Book","Physics Book","Chemistry Book","Lab Coat","Record Notebook","Calculator","Drawing Sheet","Exam Pad","Basic Toolkit","Graph Book"],
-"2nd Year":["DS Book","DBMS Book","Electronics Kit","Keyboard","Mouse","Pendrive","Circuit Board","Mini Toolkit","Digital Kit","Power Supply"],
-"3rd Year":["OS Book","AI Book","Web Dev Kit","Mini Project Kit","Headphones","Power Bank","Laptop Stand","Router","SSD","Arduino Kit"],
-"4th Year":["Project Report","Laptop Bag","Hard Disk","Printer","Formal Dress","Portfolio File","Pen Drive Set","Presentation Clicker","Office Kit","Stationery Box"]
+"1st Year":["Maths Book","Physics Book","Chemistry Book","Lab Coat","Record Notebook"],
+"2nd Year":["DS Book","DBMS Book","Electronics Kit","Keyboard","Mouse"],
+"3rd Year":["OS Book","AI Book","Mini Project Kit","Headphones","Power Bank"],
+"4th Year":["Project Report","Laptop Bag","Hard Disk","Printer","Formal Dress"]
 };
 
-// 🔥 UNIQUE IMAGE POOL (WORKING LINKS)
-let images=[
-"https://images.unsplash.com/photo-1516979187457-637abb4f9353",
-"https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-"https://images.unsplash.com/photo-1492724441997-5dc865305da7",
-"https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f",
-"https://images.unsplash.com/photo-1531297484001-80022131f5a1",
-"https://images.unsplash.com/photo-1581093458791-9d09d9c2b9c2",
-"https://images.unsplash.com/photo-1484417894907-623942c8ee29",
-"https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-"https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
-"https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
-];
-
-let imgIndex=0;
-
-// GENERATE
 for(let year in items){
-
 items[year].forEach(item=>{
-
-for(let i=1;i<=5;i++){  // 10 items ×5 = 50 per year
+for(let i=1;i<=10;i++){
 
 data.push({
 name:item+" "+i,
 price:100+Math.floor(Math.random()*900),
-image:images[imgIndex % images.length],
+image:getImage(item),
 category:year,
-seller:"Student "+(i+imgIndex),
-contact:"9876543"+(100+imgIndex)
-});
-
-imgIndex++;
-
-}
-
+seller:"Student "+i,
+contact:"9876543"+(100+i)
 });
 
 }
+});
+}
 
-// SAVE
 localStorage.setItem("products",JSON.stringify(data));
 }
 
@@ -66,13 +46,14 @@ localStorage.removeItem("login");
 location="index.html";
 }
 
-// GET
+// GET PRODUCTS
 function getProducts(){
 return JSON.parse(localStorage.getItem("products"))||[];
 }
 
-// DISPLAY
+// DISPLAY PRODUCTS
 function displayProducts(){
+
 let products=getProducts();
 let container=document.getElementById("products");
 
@@ -93,7 +74,7 @@ return;
 filtered.forEach((p,i)=>{
 container.innerHTML+=`
 <div class="card">
-<img src="${p.image}">
+<img src="${p.image}" onerror="this.src='https://via.placeholder.com/300x200'">
 <h3>${p.name}</h3>
 <p>₹${p.price}</p>
 <p>${p.category}</p>
@@ -116,13 +97,13 @@ price:price.value,
 category:category.value,
 seller:seller.value,
 contact:contact.value,
-image:images[Math.floor(Math.random()*images.length)]
+image:getImage(name.value)
 };
 
 let data=getProducts();
 data.push(p);
 localStorage.setItem("products",JSON.stringify(data));
-alert("Added!");
+alert("Product Added!");
 }
 
 // CART
@@ -146,4 +127,5 @@ total+=Number(p.price);
 document.getElementById("total").innerText="Total: ₹"+total;
 }
 
+// LOAD
 window.onload=displayProducts;
