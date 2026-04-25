@@ -1,24 +1,36 @@
-// 🔐 LOGIN CHECK
+// LOGIN CHECK
 if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index")){
 location="index.html";
 }
 
-// 🔥 PRELOAD 50 PRODUCTS
+// 🔥 PRELOAD 50 PRODUCTS WITH REAL IMAGES
 if(!localStorage.getItem("products")){
-let sample=[];
-let categories=["Books","Electronics","Lab Items","Accessories","Uniforms"];
+let data=[
+{name:"Engineering Maths Book",price:300,image:"https://picsum.photos/id/24/200",category:"Books",seller:"Arun",contact:"9876543210"},
+{name:"Physics Notebook",price:150,image:"https://picsum.photos/id/25/200",category:"Books",seller:"Kumar",contact:"9876543211"},
+{name:"Calculator",price:600,image:"https://picsum.photos/id/26/200",category:"Electronics",seller:"Rahul",contact:"9876543212"},
+{name:"Laptop Stand",price:800,image:"https://picsum.photos/id/27/200",category:"Electronics",seller:"Vijay",contact:"9876543213"},
+{name:"Lab Coat",price:250,image:"https://picsum.photos/id/28/200",category:"Uniforms",seller:"Priya",contact:"9876543214"},
+{name:"Backpack",price:700,image:"https://picsum.photos/id/29/200",category:"Accessories",seller:"Anu",contact:"9876543215"},
+{name:"USB Drive",price:400,image:"https://picsum.photos/id/30/200",category:"Electronics",seller:"Ravi",contact:"9876543216"},
+{name:"Drawing Kit",price:500,image:"https://picsum.photos/id/31/200",category:"Lab Items",seller:"Siva",contact:"9876543217"},
+{name:"Pen Set",price:100,image:"https://picsum.photos/id/32/200",category:"Accessories",seller:"Meena",contact:"9876543218"},
+{name:"College Shoes",price:900,image:"https://picsum.photos/id/33/200",category:"Uniforms",seller:"Karthik",contact:"9876543219"}
+];
 
-for(let i=1;i<=50;i++){
-sample.push({
-name:"College Item "+i,
-price:100+i*10,
+// duplicate to reach 50
+for(let i=0;i<40;i++){
+data.push({
+name:"College Item "+(i+11),
+price:200+i*10,
 image:"https://picsum.photos/200?random="+i,
-category:categories[i%5],
-contact:"98765432"+(10+i)
+category:["Books","Electronics","Lab Items","Accessories","Uniforms"][i%5],
+seller:"Student "+i,
+contact:"9876543"+(200+i)
 });
 }
 
-localStorage.setItem("products",JSON.stringify(sample));
+localStorage.setItem("products",JSON.stringify(data));
 }
 
 function logout(){
@@ -30,53 +42,57 @@ function getProducts(){
 return JSON.parse(localStorage.getItem("products"))||[];
 }
 
-// ✅ FIXED DISPLAY
 function displayProducts(){
-
 let products=getProducts();
 let container=document.getElementById("products");
 if(!container) return;
 
 let search=document.getElementById("search")?.value.toLowerCase()||"";
-let filter=document.getElementById("filter")?.value||"";
+let filter=document.getElementById("filter")||{value:""};
 
 container.innerHTML="";
 
-let filtered=products
+products
 .filter(p=>p.name.toLowerCase().includes(search))
-.filter(p=>filter===""||p.category===filter);
-
-if(filtered.length===0){
-container.innerHTML="<h2>No matching products</h2>";
-return;
-}
-
-filtered.forEach((p,i)=>{
+.filter(p=>filter.value===""||p.category===filter.value)
+.forEach((p,i)=>{
 
 let div=document.createElement("div");
 div.className="card";
 
 div.innerHTML=`
-<img src="${p.image}" onerror="this.src='https://via.placeholder.com/150'">
+<img src="${p.image}">
 <h3>${p.name}</h3>
 <p>₹${p.price}</p>
 <p>${p.category}</p>
+<p>${p.seller}</p>
 
-<a href="https://wa.me/91${p.contact}" target="_blank">
-<button>Contact</button>
-</a>
+<a href="https://wa.me/91${p.contact}">
+<button>Contact</button></a>
 
 <button onclick="addCart(${i})">Cart</button>
-<button onclick="deleteProduct(${i})">Delete</button>
 `;
 
 container.appendChild(div);
 });
-
-showStats();
 }
 
-// CART
+function addProduct(){
+let p={
+name:name.value,
+price:price.value,
+category:category.value,
+seller:seller.value,
+contact:contact.value,
+image:"https://picsum.photos/200?random="+Math.random()
+};
+
+let data=getProducts();
+data.push(p);
+localStorage.setItem("products",JSON.stringify(data));
+alert("Product Added!");
+}
+
 function addCart(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.push(getProducts()[i]);
@@ -84,23 +100,12 @@ localStorage.setItem("cart",JSON.stringify(cart));
 alert("Added to cart");
 }
 
-// DELETE
-function deleteProduct(i){
-let data=getProducts();
-data.splice(i,1);
-localStorage.setItem("products",JSON.stringify(data));
-displayProducts();
-}
-
-// CART PAGE
 function displayCart(){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 let c=document.getElementById("cart");
 let total=0;
 
 if(!c) return;
-
-c.innerHTML="";
 
 cart.forEach(p=>{
 c.innerHTML+=`<p>${p.name} - ₹${p.price}</p>`;
@@ -110,24 +115,8 @@ total+=Number(p.price);
 document.getElementById("total").innerText="Total: ₹"+total;
 }
 
-// DARK MODE
 function toggleMode(){
 document.body.classList.toggle("dark");
 }
 
-// STATS
-function showStats(){
-let p=getProducts().length;
-let c=(JSON.parse(localStorage.getItem("cart"))||[]).length;
-
-let stats=document.getElementById("stats");
-if(stats){
-stats.innerHTML=`Products: ${p} | Cart: ${c}`;
-}
-}
-
-// LOAD
-window.onload=function(){
-displayProducts();
-displayCart();
-}
+window.onload=displayProducts;
