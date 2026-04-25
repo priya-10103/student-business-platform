@@ -1,80 +1,62 @@
-// LOGIN CHECK
 if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index")){
 location="index.html";
 }
 
-// 🔥 GENERATE 200 UNIQUE ENGINEERING PRODUCTS
+// 🔥 CREATE DATA ONLY ONCE
 if(!localStorage.getItem("products")){
 
-let subjects = {
-"1st Year":[
-"Engineering Mathematics I",
-"Engineering Physics",
-"Engineering Chemistry",
-"Basic Electrical Engineering",
-"Programming in C"
-],
+let baseSubjects = [
+{subject:"Engineering Mathematics",year:"1st Year"},
+{subject:"Engineering Physics",year:"1st Year"},
+{subject:"Engineering Chemistry",year:"1st Year"},
+{subject:"Basic Electrical Engineering",year:"1st Year"},
+{subject:"Programming in C",year:"1st Year"},
 
-"2nd Year":[
-"Data Structures",
-"Digital Electronics",
-"Object Oriented Programming",
-"Database Management Systems",
-"Discrete Mathematics"
-],
+{subject:"Data Structures",year:"2nd Year"},
+{subject:"Digital Electronics",year:"2nd Year"},
+{subject:"OOP in Java",year:"2nd Year"},
+{subject:"DBMS",year:"2nd Year"},
+{subject:"Discrete Mathematics",year:"2nd Year"},
 
-"3rd Year":[
-"Operating Systems",
-"Computer Networks",
-"Artificial Intelligence",
-"Software Engineering",
-"Microprocessors"
-],
+{subject:"Operating Systems",year:"3rd Year"},
+{subject:"Computer Networks",year:"3rd Year"},
+{subject:"Software Engineering",year:"3rd Year"},
+{subject:"Artificial Intelligence",year:"3rd Year"},
+{subject:"Microprocessors",year:"3rd Year"},
 
-"4th Year":[
-"Machine Learning",
-"Cloud Computing",
-"IoT Systems",
-"Big Data Analytics",
-"Final Year Project"
-]
-};
+{subject:"Machine Learning",year:"4th Year"},
+{subject:"Cloud Computing",year:"4th Year"},
+{subject:"IoT Systems",year:"4th Year"},
+{subject:"Big Data Analytics",year:"4th Year"},
+{subject:"Final Year Project",year:"4th Year"}
+];
 
 let data=[];
-let img="https://via.placeholder.com/300x200";
 
-// 50 products per year = 10 repeats per subject (NO SAME NAME BLINDLY — we vary index)
-for(let year in subjects){
-subjects[year].forEach(sub=>{
-for(let i=1;i<=10;i++){
+// Each subject has random availability count
+baseSubjects.forEach(s=>{
+let count = Math.floor(Math.random()*6)+1; // 1 to 6 available
 
+for(let i=1;i<=count;i++){
 data.push({
-name: sub + " - Module " + i,
-price: 50 + Math.floor(Math.random()*450),
-year: year,
-contact: "98" + Math.floor(10000000 + Math.random()*90000000),
-image: img
-});
-
-}
+subject:s.subject,
+year:s.year,
+price:100 + Math.floor(Math.random()*500),
+contact:"98"+Math.floor(100000000+Math.random()*900000000),
+available:count
 });
 }
+});
 
 localStorage.setItem("products",JSON.stringify(data));
 }
 
-// LOGOUT
-function logout(){
-localStorage.removeItem("login");
-location="index.html";
-}
-
-// GET
+// GET PRODUCTS
 function getProducts(){
 return JSON.parse(localStorage.getItem("products"))||[];
 }
 
-// DISPLAY
+// DISPLAY PRODUCTS
 function displayProducts(){
 
 let products=getProducts();
@@ -85,8 +67,8 @@ let filter=document.getElementById("filter")?.value||"";
 
 container.innerHTML="";
 
-let filtered=products
-.filter(p=>p.name.toLowerCase().includes(search))
+let filtered = products
+.filter(p=>p.subject.toLowerCase().includes(search))
 .filter(p=>filter===""||p.year===filter);
 
 if(filtered.length===0){
@@ -97,10 +79,10 @@ return;
 filtered.forEach((p,i)=>{
 container.innerHTML+=`
 <div class="card">
-<img src="${p.image}">
-<h3>${p.name}</h3>
+<h3>${p.subject}</h3>
 <p><b>${p.year}</b></p>
 <p>₹${p.price}</p>
+<p>Available: ${p.available}</p>
 
 <a href="https://wa.me/91${p.contact}">
 <button>Contact</button></a>
@@ -111,7 +93,7 @@ container.innerHTML+=`
 });
 }
 
-// CART
+// ADD CART
 function addCart(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.push(getProducts()[i]);
@@ -119,18 +101,24 @@ localStorage.setItem("cart",JSON.stringify(cart));
 alert("Added to cart");
 }
 
-// CART DISPLAY
+// CART
 function displayCart(){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 let total=0;
 
 cart.forEach(p=>{
 document.getElementById("cart").innerHTML+=
-`<p>${p.name} (${p.year}) - ₹${p.price}</p>`;
+`<p>${p.subject} (${p.year}) - ₹${p.price}</p>`;
 total+=Number(p.price);
 });
 
 document.getElementById("total").innerText="Total: ₹"+total;
+}
+
+// LOGOUT
+function logout(){
+localStorage.removeItem("login");
+location="index.html";
 }
 
 window.onload=displayProducts;
