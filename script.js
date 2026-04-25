@@ -2,37 +2,39 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// CREATE ONLY UNIQUE SUBJECTS (NO REPEAT)
+// 🔥 FIXED UNIQUE STRUCTURE (NO REPEAT SUBJECTS)
 if(!localStorage.getItem("products")){
 
 let subjects = [
-{n:"Engineering Mathematics",y:"1st Year"},
-{n:"Engineering Physics",y:"1st Year"},
-{n:"Engineering Chemistry",y:"1st Year"},
-{n:"Programming in C",y:"1st Year"},
+{n:"Maths",y:"1st CSE"},
+{n:"Physics",y:"1st ECE"},
+{n:"Basic Electrical",y:"1st EEE"},
+{n:"Engineering Graphics",y:"1st CIVIL"},
+{n:"Mechanics",y:"1st MECH"},
 
-{n:"Data Structures",y:"2nd Year"},
-{n:"DBMS",y:"2nd Year"},
-{n:"OOP Java",y:"2nd Year"},
+{n:"Data Structures",y:"2nd CSE"},
+{n:"Digital Electronics",y:"2nd ECE"},
+{n:"Thermodynamics",y:"2nd MECH"},
 
-{n:"Operating Systems",y:"3rd Year"},
-{n:"Computer Networks",y:"3rd Year"},
-{n:"Software Engineering",y:"3rd Year"},
+{n:"Operating Systems",y:"3rd CSE"},
+{n:"Computer Networks",y:"3rd CSE"},
 
-{n:"Machine Learning",y:"4th Year"},
-{n:"Cloud Computing",y:"4th Year"},
-{n:"IoT Systems",y:"4th Year"}
+{n:"Machine Learning",y:"4th CSE"},
+{n:"AI Systems",y:"4th CSE"}
 ];
 
 let data=[];
 
+// UNIQUE + DIFFERENT AVAILABLE VALUES
 subjects.forEach(s=>{
+let available = Math.floor(Math.random()*4)+1;
+
 data.push({
 name:s.n,
 year:s.y,
-price:100+Math.floor(Math.random()*400),
+price:100+Math.floor(Math.random()*500),
 contact:"98"+Math.floor(100000000+Math.random()*900000000),
-available:Math.floor(Math.random()*10)+1 // DIFFERENT availability
+available:available
 });
 });
 
@@ -67,7 +69,7 @@ list.innerHTML+=`
 <a href="https://wa.me/91${p.contact}">
 <button>Contact</button></a>
 
-<button onclick="add(${i})">Add Cart</button>
+<button onclick="add(${i})">Cart</button>
 </div>
 `;
 });
@@ -81,7 +83,7 @@ localStorage.setItem("cart",JSON.stringify(cart));
 alert("Added");
 }
 
-// CART
+// CART SHOW
 function showCart(){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 let total=0;
@@ -95,7 +97,6 @@ box.innerHTML+=`
 <h3>${p.name}</h3>
 <p>${p.year}</p>
 <p>₹${p.price}</p>
-
 <button onclick="removeItem(${i})">Remove</button>
 </div>
 `;
@@ -115,10 +116,12 @@ showCart();
 
 // PAYMENT
 function payNow(){
-if(confirm("Proceed to payment?")){
+if(confirm("Pay Online?")){
+setTimeout(()=>{
 alert("Payment Successful ✔");
 localStorage.removeItem("cart");
 location.reload();
+},1500);
 }
 }
 
