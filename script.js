@@ -3,53 +3,53 @@ if(localStorage.getItem("login")!=="true" && !location.pathname.includes("index"
 location="index.html";
 }
 
-// CLEAN DATA BUILD (NO undefined EVER)
+// CLEAN DATA (NO MIXED OLD DATA)
 if(!localStorage.getItem("products")){
 
 let syllabus = {
-"CSE": {
-"1st Year":["Maths I","Physics","Chemistry","Programming Basics","Engineering Graphics"],
-"2nd Year":["Data Structures","DBMS","OOP","Digital Logic","Discrete Maths"],
-"3rd Year":["OS","CN","Software Engineering","AI","Microprocessors"],
-"4th Year":["ML","Cloud Computing","Cyber Security","Big Data","Project"]
+"CSE":{
+"1st Year":["Maths","Physics","Chemistry","Programming","Graphics"],
+"2nd Year":["DS","DBMS","OOP","Discrete Maths","Digital Logic"],
+"3rd Year":["OS","CN","Software Eng","AI","Microprocessor"],
+"4th Year":["ML","Cloud","Cyber Security","Big Data","Project"]
 },
 
-"ECE": {
-"1st Year":["Maths I","Physics","Chemistry","Basic Electronics","C Programming"],
+"ECE":{
+"1st Year":["Maths","Physics","Chemistry","Basic Electronics","C Programming"],
 "2nd Year":["Circuits","Signals","Digital Systems","Network Theory","OOP"],
-"3rd Year":["Communication","Microprocessors","VLSI","Control Systems","Embedded"],
+"3rd Year":["Communication","VLSI","Embedded","Control","Microprocessor"],
 "4th Year":["IoT","Wireless","AI Electronics","Robotics","Project"]
 },
 
-"MECH": {
-"1st Year":["Maths I","Physics","Chemistry","Engineering Drawing","Workshop"],
-"2nd Year":["Thermodynamics","Fluid Mechanics","Strength","Manufacturing","Machine Drawing"],
+"MECH":{
+"1st Year":["Maths","Physics","Chemistry","Engineering Drawing","Workshop"],
+"2nd Year":["Thermo","Fluid","Strength","Manufacturing","Machine Drawing"],
 "3rd Year":["Heat Transfer","Dynamics","Automobile","CAD/CAM","Mechatronics"],
-"4th Year":["Robotics","Energy Systems","Industrial Engg","Advanced Manufacturing","Project"]
+"4th Year":["Robotics","Energy","Industrial","Advanced Manufacturing","Project"]
 },
 
-"EEE": {
-"1st Year":["Maths I","Physics","Chemistry","Basic Electrical","C Programming"],
-"2nd Year":["Electrical Machines","Circuits","Electromagnetics","Measurements","Digital Systems"],
-"3rd Year":["Power Systems","Control Systems","Power Electronics","Microcontrollers","High Voltage"],
-"4th Year":["Smart Grid","Renewable Energy","EV Systems","Automation","Project"]
+"EEE":{
+"1st Year":["Maths","Physics","Chemistry","Basic Electrical","C Programming"],
+"2nd Year":["Machines","Circuits","Electromagnetics","Measurements","Digital Systems"],
+"3rd Year":["Power Systems","Control","Power Electronics","Microcontrollers","High Voltage"],
+"4th Year":["Smart Grid","Renewable","EV","Automation","Project"]
 },
 
-"CIVIL": {
-"1st Year":["Maths I","Physics","Chemistry","Engineering Mechanics","Drawing"],
-"2nd Year":["Structural","Surveying","Materials","Fluid Mechanics","Strength"],
-"3rd Year":["Concrete","Transportation","Geotechnical","Environmental","Hydrology"],
-"4th Year":["Earthquake","Construction","Urban Planning","Design","Project"]
+"CIVIL":{
+"1st Year":["Maths","Physics","Chemistry","Mechanics","Drawing"],
+"2nd Year":["Structural","Surveying","Materials","Fluid","Strength"],
+"3rd Year":["Concrete","Transport","GeoTech","Environment","Hydrology"],
+"4th Year":["Earthquake","Construction","Urban","Design","Project"]
 }
 };
 
 let data=[];
 
-// build dataset
 for(let dept in syllabus){
 for(let year in syllabus[dept]){
 syllabus[dept][year].forEach(sub=>{
 data.push({
+id: crypto.randomUUID(), // 🔥 IMPORTANT FIX
 name:sub,
 year:year,
 dept:dept,
@@ -64,21 +64,12 @@ contact:"98"+Math.floor(100000000+Math.random()*900000000)
 localStorage.setItem("products",JSON.stringify(data));
 }
 
+// SAFE GET
 function get(){
-let d = JSON.parse(localStorage.getItem("products"))||[];
-
-// 🔥 FIX OLD BAD DATA (prevents undefined forever)
-return d.map(p=>({
-name:p.name || "Unknown Subject",
-year:p.year || "1st Year",
-dept:p.dept || "CSE",
-price:p.price || 100,
-available:p.available || 1,
-contact:p.contact || "9999999999"
-}));
+return JSON.parse(localStorage.getItem("products"))||[];
 }
 
-// 🔥 SHOW FUNCTION (FIXED FILTER + NO EMPTY BUG)
+// 🔥 FIXED SHOW (NO INDEX BUG)
 function show(){
 
 let list=document.getElementById("list");
@@ -89,17 +80,17 @@ let dept=document.getElementById("dept")?.value||"";
 
 list.innerHTML="";
 
-let data=get()
+let filtered=get()
 .filter(p=>p.name.toLowerCase().includes(search))
 .filter(p=>year===""||p.year===year)
 .filter(p=>dept===""||p.dept===dept);
 
-// 🔥 IMPORTANT FIX: if empty → show ALL instead of blank
-if(data.length===0){
-data=get();
+// fallback (NEVER EMPTY PAGE)
+if(filtered.length===0){
+filtered=get();
 }
 
-data.forEach((p,i)=>{
+filtered.forEach((p)=>{
 list.innerHTML+=`
 <div class="card">
 <h3>${p.name}</h3>
@@ -107,16 +98,21 @@ list.innerHTML+=`
 <p>₹${p.price}</p>
 <p>Available: ${p.available}</p>
 
-<button onclick="add(${i})">Cart</button>
+<a href="https://wa.me/91${p.contact}">
+<button>Contact</button></a>
+
+<button onclick="add('${p.id}')">Cart</button>
 </div>
 `;
 });
 }
 
-// CART
-function add(i){
+// 🔥 FIXED CART (USES ID NOT INDEX)
+function add(id){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
-cart.push(get()[i]);
+let item=get().find(p=>p.id===id);
+
+cart.push(item);
 localStorage.setItem("cart",JSON.stringify(cart));
 alert("Added");
 }
@@ -152,7 +148,7 @@ showCart();
 }
 
 function payNow(){
-alert("Processing...");
+alert("Processing Payment...");
 setTimeout(()=>{
 alert("Payment Successful ✔");
 localStorage.removeItem("cart");
