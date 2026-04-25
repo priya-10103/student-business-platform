@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Product</title>
-    <link rel="stylesheet" href="style.css">
+<title>Add Product</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h2>Add Product</h2>
 
-<input type="text" id="name" placeholder="Product Name"><br>
-<input type="number" id="price" placeholder="Price"><br>
-<input type="text" id="contact" placeholder="Contact"><br>
+<input id="name" placeholder="Name"><br>
+<input id="price" placeholder="Price"><br>
+<input id="image" placeholder="Image URL"><br>
+
+<select id="category">
+<option>Books</option>
+<option>Electronics</option>
+</select><br>
+
+<input id="contact" placeholder="Phone"><br>
 
 <button onclick="addProduct()">Submit</button>
 
-</body>
 <script src="script.js"></script>
+</body>
 </html>
