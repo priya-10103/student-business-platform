@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h2>Student Marketplace Login</h2>
+<h2>Login</h2>
 
 <input id="user" placeholder="Username"><br>
 <input id="pass" type="password" placeholder="Password"><br>
@@ -15,12 +15,12 @@
 
 <script>
 function login(){
-    if(user.value==="admin" && pass.value==="1234"){
-        localStorage.setItem("login","true");
-        window.location="home.html";
-    } else {
-        alert("Wrong login");
-    }
+if(user.value==="admin" && pass.value==="1234"){
+localStorage.setItem("login","true");
+location="home.html";
+}else{
+alert("Wrong credentials");
+}
 }
 </script>
 
