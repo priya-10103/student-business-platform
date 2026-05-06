@@ -53,7 +53,7 @@ id: dept+"_"+year+"_"+sub,   // 🔥 STABLE UNIQUE ID
 name: sub,
 year: year,
 dept: dept,
-price: 50 + Math.floor(Math.random()*300),
+price: 50 + Math.floor(Math.random()*200),
 available: 1 + Math.floor(Math.random()*5),
 contact: "98"+Math.floor(100000000 + Math.random()*900000000)
 });
