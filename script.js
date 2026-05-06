@@ -154,13 +154,38 @@ showCart();
 }
 
 // PAY
-function payNow(){
-alert("Processing Payment...");
-setTimeout(()=>{
-alert("Payment Successful ✔");
-localStorage.removeItem("cart");
-location.reload();
-},1200);
+function payNow() {
+    let method = document.querySelector('input[name="payment"]:checked');
+
+    if (!method) {
+        alert("Please select a payment method");
+        return;
+    }
+
+    switch(method.value) {
+        case "gpay":
+            alert("Redirecting to Google Pay...");
+            // simulate redirect
+            window.location.href = "https://pay.google.com/";
+            break;
+
+        case "phonepe":
+            alert("Redirecting to PhonePe...");
+            window.location.href = "https://www.phonepe.com/";
+            break;
+
+        case "paytm":
+            alert("Redirecting to Paytm...");
+            window.location.href = "https://paytm.com/";
+            break;
+
+        case "card":
+            alert("Proceeding with Card Payment...");
+            break;
+
+        default:
+            alert("Invalid option");
+    }
 }
 
 function logout(){
